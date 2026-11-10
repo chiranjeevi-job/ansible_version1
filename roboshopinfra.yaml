@@ -28,7 +28,12 @@
         wait: true
       loop: "{{ instance_names }}"
       when: action == "create"
-      register: ec2_output
+      register: ec2_output 
+
+    - name: print ec2 creation output
+      debug:
+      msg: "{{ ec2_output }}"
+
 
     - name: Delete EC2 instances
       amazon.aws.ec2_instance:
