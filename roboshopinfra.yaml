@@ -6,7 +6,7 @@
 
   vars:
     instance_names:
-      - mongodb
+      - mangodb
       - redis
       - mysql
       - rabbitmq
