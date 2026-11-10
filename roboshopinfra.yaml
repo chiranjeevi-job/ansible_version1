@@ -1,29 +1,40 @@
-- name: Launch an AWS EC2 instance
-  hosts: localhost 
-   vars: 
-        instance_name: ["mongodb", "redis", "mysql", "rabbitmq", "catalogue", "user", "cart", "shipping", "payment", "frontend"]
-  
+
+- name: Launch or delete AWS EC2 instances
+  hosts: localhost
+  connection: local
+
+  vars:
+    instance_names:
+      - mongodb
+      - redis
+      - mysql
+      - rabbitmq
+      - catalogue
+      - user
+      - cart
+      - shipping
+      - payment
+      - frontend
+
   tasks:
-    - name: Create EC2 instance 
-     
+    - name: Create EC2 instances
       amazon.aws.ec2_instance:
-        name: "roboshop-{{item}}"
+        name: "roboshop-{{ item }}"
         region: us-east-1
         image_id: ami-0055977a6e828a4f4
         instance_type: t3.micro
-        security_group: "{{instance_name}}"
+        security_group: roboshop_common
         state: present
-        wait: true 
+        wait: true
+      loop: "{{ instance_names }}"
+      when: action == "create"
+      register: ec2_output
 
-      loop: "{{instance_name}}"
-      when: create 
-      regiter: ec2_output 
-
-    - name: delete ec2 instances
+    - name: Delete EC2 instances
       amazon.aws.ec2_instance:
-      state: absent
-      name: "roboshop-{{ item }}"
-      region: us-east-1
-      wait: false
-      loop: "{{ instances }}"
+        name: "roboshop-{{ item }}"
+        region: us-east-1
+        state: absent
+        wait: false
+      loop: "{{ instance_names }}"
       when: action == "delete"
