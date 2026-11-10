@@ -9,7 +9,6 @@
       - mangodb
       - redis
       - mysql 
-      - rabbitmq
       - catalogue
       - user
       - cart
